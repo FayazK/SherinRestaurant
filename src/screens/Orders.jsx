@@ -47,7 +47,7 @@ export const OrderScreen = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/v1/orders/all-orders"
+          `${process.env.REACT_APP_API_URL}/orders/all-orders`
         );
         setLoading(false);
 

@@ -27,7 +27,7 @@ const Login = () => {
   const onFinish = async (values) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/auth/login",
+        `${process.env.REACT_APP_API_URL}/auth/login`,
         {
           email: values.email,
           password: values.password,

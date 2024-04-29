@@ -106,7 +106,7 @@ export const CatagoriesScreen = () => {
     setIsLoading(true);
     try {
       const { data } = await axios.get(
-        "http://localhost:8000/api/v1/category/get-category"
+        `${process.env.REACT_APP_API_URL}/category/get-category`
       );
       console.log("cat", data.category);
       if (data.success && data.category) {
@@ -148,7 +148,7 @@ export const CatagoriesScreen = () => {
         return;
       }
       const response = await axios.delete(
-        `http://localhost:8000/api/v1/category/delete-category/${id}`,
+        `${process.env.REACT_APP_API_URL}/category/delete-category/${id}`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,

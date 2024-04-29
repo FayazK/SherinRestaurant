@@ -131,7 +131,7 @@ export const ProductScreen = () => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
         const response = await axios.delete(
-          `http://localhost:8000/api/v1/product/delete-product/${productId}`
+          `${process.env.REACT_APP_API_URL}/product/delete-product/${productId}`
         );
         if (response.status === 200) {
           setProducts(products.filter((product) => product._id !== productId));
@@ -156,7 +156,7 @@ export const ProductScreen = () => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/v1/product/get-products"
+        `${process.env.REACT_APP_API_URL}/product/get-products`
       );
       console.log("response", response);
       if (response.data.success && response.data.products) {
