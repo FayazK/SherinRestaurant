@@ -74,7 +74,7 @@ export const CatagoriesScreen = () => {
       };
 
       const { data } = await axios.post(
-        "http://localhost:8000/api/v1/category/create-category",
+        "${process.env.REACT_APP_API_URL}/category/create-category",
         formData,
         config
       );
