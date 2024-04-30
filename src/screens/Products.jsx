@@ -93,7 +93,7 @@ export const ProductScreen = () => {
           <>
             {record ? (
               <Image
-                src={`http://localhost:8000/uploads/${record.photo}`}
+                src={`https://hc.fayazk.com/uploads/${record.photo}`}
                 alt="Product Photo"
                 style={{ maxWidth: "100px", maxHeight: "100px" }}
               />

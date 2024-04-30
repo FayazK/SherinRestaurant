@@ -163,7 +163,7 @@ export const OrderScreen = () => {
         record.cartItems.map((item) =>
           item.product?.photo ? (
             <Image
-              src={`http://localhost:8000/uploads/${item.product.photo}`}
+              src={`https://hc.fayazk.com/uploads/${item.product.photo}`}
               alt={item.product.name}
               style={{ width: "50px", height: "50px" }}
             />
