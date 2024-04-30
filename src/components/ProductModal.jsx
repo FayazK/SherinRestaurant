@@ -38,7 +38,7 @@ const CreateProductModal = ({
             uid: "-1",
             name: "image.png",
             status: "done",
-            url: "http://localhost:8000/uploads/" + currentProduct.photo,
+            url: "https://hc.fayazk.com/uploads/" + currentProduct.photo,
           },
         ],
       });
@@ -50,7 +50,7 @@ const CreateProductModal = ({
   const fetchCategories = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/v1/category/get-category"
+        `${process.env.REACT_APP_API_URL}/category/get-category`
       );
       setCategories(response.data.category || []);
     } catch (error) {
@@ -90,13 +90,13 @@ const CreateProductModal = ({
       let response;
       if (currentProduct) {
         response = await axios.put(
-          `http://localhost:8000/api/v1/product/update-product/${currentProduct._id}`,
+          `${process.env.REACT_APP_API_URL}/product/update-product/${currentProduct._id}`,
           formData,
           config
         );
       } else {
         response = await axios.post(
-          "http://localhost:8000/api/v1/product/create-product",
+          `${process.env.REACT_APP_API_URL}/product/create-product`,
           formData,
           config
         );
