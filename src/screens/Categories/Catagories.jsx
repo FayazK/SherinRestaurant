@@ -74,7 +74,7 @@ export const CatagoriesScreen = () => {
       };
 
       const { data } = await axios.post(
-        "${process.env.REACT_APP_API_URL}/category/create-category",
+        `${process.env.REACT_APP_API_URL}/category/create-category`,
         formData,
         config
       );
