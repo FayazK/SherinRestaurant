@@ -14,6 +14,7 @@ import { CustomerScreen } from "./screens/Customers";
 import { ProductScreen } from "./screens/Products";
 import { OrderScreen } from "./screens/Orders";
 import { CatagoriesScreen } from "./screens/Categories/Catagories";
+import { Setting } from "./screens/Settings";
 
 function App() {
   return (
@@ -25,8 +26,8 @@ function App() {
           <Route path="products" element={<ProductScreen />} />
           <Route path="catagories" element={<CatagoriesScreen />} />
           <Route path="orders" element={<OrderScreen />} />
-
           <Route path="users" element={<CustomerScreen />} />
+          <Route path="settings" element={<Setting />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" />} />

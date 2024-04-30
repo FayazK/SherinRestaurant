@@ -36,6 +36,9 @@ export const MenuComp = () => {
       <Menu.Item key="5" icon={<ShoppingCartOutlined />}>
         <Link to="orders">Orders</Link>
       </Menu.Item>
+      <Menu.Item key="6" icon={<ShoppingCartOutlined />}>
+        <Link to="settings">Settings</Link>
+      </Menu.Item>
     </Menu>
   );
 };

@@ -178,14 +178,19 @@ export const OrderScreen = () => {
       render: (text, record) => (
         <>
           {record.cartItems.slice(0, 1).map((item) => (
-            <Tag color="blue" key={item.product?.name}>
+            <Tag color="blue" key={item.product?._id || item.product?.name}>
               {item.product?.name}
             </Tag>
           ))}
           {record.cartItems.length > 1 && (
             <EyeOutlined
               onClick={() =>
-                showModal(record.cartItems.map((item) => item.product?.name))
+                showModal(
+                  record.cartItems.map((item) => ({
+                    name: item.product?.name,
+                    price: item.product?.price,
+                  }))
+                )
               }
             />
           )}
@@ -194,34 +199,21 @@ export const OrderScreen = () => {
     },
     {
       title: "Price",
-      key: "price",
-      render: (text, record) => {
-        // Calculate the total price
-        const totalPrice = record.cartItems.reduce(
-          (sum, item) => sum + (item.product?.price || 0),
-          0
-        );
-
-        // Return the total price as a string
-        return totalPrice.toFixed(2); // Assuming you want to format it as a fixed decimal
-      },
+      key: "total",
+      render: (text, record) => record.total,
     },
     {
       title: "Quantity",
       key: "quantity",
       render: (text, record) => {
-        // Calculate the total quantity
         const totalQuantity = record.cartItems.reduce(
           (sum, item) => sum + (item.quantity || 0),
           0
         );
 
-        // Check the number of cart items
         if (record.cartItems.length > 1) {
-          // Return the total quantity if more than one item
           return totalQuantity;
         } else {
-          // Return the quantity or "N/A" if only one item
           return record.cartItems[0].quantity || "N/A";
         }
       },
@@ -319,9 +311,9 @@ export const OrderScreen = () => {
             flexDirection: "column",
           }}
         >
-          {modalContent.map((name, index) => (
+          {modalContent.map((product, index) => (
             <Tag color="red" key={index}>
-              {name}
+              {`${product.name} - Rs.${product.price.toFixed(2)}`}
             </Tag>
           ))}
         </div>
