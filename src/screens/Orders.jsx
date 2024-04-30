@@ -89,7 +89,7 @@ export const OrderScreen = () => {
     setLoading(true);
     try {
       await axios.delete(
-        `http://localhost:8000/api/v1/orders/delete-order/${id}`
+        `${process.env.REACT_APP_API_URL}/orders/delete-order/${id}`
       );
       setOrders(orders.filter((order) => order._id !== id));
       notification.success({
@@ -108,7 +108,7 @@ export const OrderScreen = () => {
   const handleStatusUpdate = async (id, selectedStatus) => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/api/v1/orders/${id}/status`,
+        `${process.env.REACT_APP_API_URL}/orders/${id}/status`,
         { status: selectedStatus },
         {
           headers: {
