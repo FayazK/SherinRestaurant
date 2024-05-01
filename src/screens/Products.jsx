@@ -93,7 +93,7 @@ export const ProductScreen = () => {
           <>
             {record ? (
               <Image
-                src={`https://shc.fayazk.com/uploads/${record.photo}`}
+                src={`${process.env.REACT_APP_IMAGE_URL}/uploads/${record.photo}`}
                 alt="Product Photo"
                 style={{ maxWidth: "100px", maxHeight: "100px" }}
               />

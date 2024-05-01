@@ -38,7 +38,9 @@ const CreateProductModal = ({
             uid: "-1",
             name: "image.png",
             status: "done",
-            url: "https://hc.fayazk.com/uploads/" + currentProduct.photo,
+            url:
+              `${process.env.REACT_APP_IMAGE_URL}/uploads/` +
+              currentProduct.photo,
           },
         ],
       });
