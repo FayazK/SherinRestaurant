@@ -9,6 +9,7 @@ import {
   Form,
 } from "antd";
 import { Spin } from "antd";
+import _ from "lodash";
 import axios from "axios";
 import CreateProductModal from "../components/ProductModal";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
@@ -67,16 +68,15 @@ export const ProductScreen = () => {
       dataIndex: "price",
       key: "price",
     },
+
     {
       title: "Category",
       dataIndex: "category",
       key: "category",
       render: (text, record) => {
-        console.log(record);
-        if (record.category && record.category.name) {
-          return record.category.name;
-        }
-        return "No Category";
+        // Utilizing optional chaining to safely access category name
+        const categoryName = record.category?.name || "No Category";
+        return categoryName;
       },
     },
     {
@@ -168,11 +168,11 @@ export const ProductScreen = () => {
             slug: product.slug,
             description: product.description,
             price: product.price,
-            category: product.category ? product.category._id : "N/A",
+            category: product.category || "N/A",
             quantity: product.quantity,
             createdAt: product.createdAt,
             updatedAt: product.updatedAt,
-            photo: product.photo ? product.photo : "N/A",
+            photo: product.photo || "N/A",
           };
         });
         setProducts(formattedProducts);
