@@ -33,6 +33,7 @@ const CreateProductModal = ({
         price: currentProduct.price,
         category: currentProduct.category?._id,
         quantity: currentProduct.quantity,
+        discount: currentProduct.discount,
         photo: [
           {
             uid: "-1",
@@ -75,6 +76,7 @@ const CreateProductModal = ({
     formData.append("price", values.price);
     formData.append("category", values.category);
     formData.append("quantity", values.quantity);
+    formData.append("discount", values.discount);
 
     if (values.photo && values.photo.length > 0) {
       formData.append("photo", values.photo[0].originFileObj);
@@ -196,6 +198,13 @@ const CreateProductModal = ({
           <Form.Item
             name="quantity"
             label="Quantity"
+            rules={[{ required: true }]}
+          >
+            <InputNumber min={1} style={{ width: "100%" }} />
+          </Form.Item>
+          <Form.Item
+            name="discount"
+            label="Discount"
             rules={[{ required: true }]}
           >
             <InputNumber min={1} style={{ width: "100%" }} />

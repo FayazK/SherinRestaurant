@@ -9,7 +9,6 @@ import {
   Form,
 } from "antd";
 import { Spin } from "antd";
-import _ from "lodash";
 import axios from "axios";
 import CreateProductModal from "../components/ProductModal";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
@@ -18,9 +17,7 @@ import { DescriptionCell } from "../components/DescriptionCell";
 export const ProductScreen = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
   const [currentRecord, setCurrentRecord] = useState(null);
   const [form] = Form.useForm();
 
@@ -74,7 +71,6 @@ export const ProductScreen = () => {
       dataIndex: "category",
       key: "category",
       render: (text, record) => {
-        // Utilizing optional chaining to safely access category name
         const categoryName = record.category?.name || "No Category";
         return categoryName;
       },
@@ -83,6 +79,12 @@ export const ProductScreen = () => {
       title: "Quantity",
       dataIndex: "quantity",
       key: "quantity",
+    },
+    {
+      title: "Discount",
+      dataIndex: "discount",
+      key: "discount",
+      render: (discount) => `${discount}%`,
     },
     {
       title: "Photo",
@@ -170,6 +172,7 @@ export const ProductScreen = () => {
             price: product.price,
             category: product.category || "N/A",
             quantity: product.quantity,
+            discount: product.discount,
             createdAt: product.createdAt,
             updatedAt: product.updatedAt,
             photo: product.photo || "N/A",
