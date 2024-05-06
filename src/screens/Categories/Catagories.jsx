@@ -207,14 +207,18 @@ export const CatagoriesScreen = () => {
           <div style={{ position: "absolute", top: 20, right: 10 }}>
             <Button
               icon={<EditOutlined />}
-              style={{ backgroundColor: "red", color: "white", marginRight: 8 }}
+              style={{
+                backgroundColor: "#F49E1A",
+                color: "white",
+                marginRight: 8,
+              }}
               onClick={() => showEditModal(record)}
             >
               Edit
             </Button>
             <Button
               icon={<DeleteOutlined />}
-              style={{ backgroundColor: "red", color: "white" }}
+              style={{ backgroundColor: "#F49E1A", color: "white" }}
               onClick={() => {
                 if (
                   window.confirm(
@@ -248,11 +252,12 @@ export const CatagoriesScreen = () => {
           justifyContent: "space-between",
           marginBottom: 5,
           alignItems: "center",
+          marginTop: 50,
         }}
       >
         <Typography.Title level={2}>Categories</Typography.Title>
         <Button
-          style={{ backgroundColor: "red" }}
+          style={{ backgroundColor: "#F49E1A" }}
           type="primary"
           onClick={showCreateModal}
         >
@@ -299,7 +304,7 @@ export const CatagoriesScreen = () => {
           </Form.Item>
           <Form.Item>
             <Button
-              style={{ backgroundColor: "red" }}
+              style={{ backgroundColor: "#F49E1A" }}
               type="primary"
               htmlType="submit"
             >

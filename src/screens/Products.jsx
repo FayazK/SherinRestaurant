@@ -65,7 +65,11 @@ export const ProductScreen = () => {
       dataIndex: "price",
       key: "price",
     },
-
+    {
+      title: "Discounted Price",
+      dataIndex: "discountPrice",
+      key: "discountPrice",
+    },
     {
       title: "Category",
       dataIndex: "category",
@@ -80,12 +84,7 @@ export const ProductScreen = () => {
       dataIndex: "quantity",
       key: "quantity",
     },
-    {
-      title: "Discount",
-      dataIndex: "discount",
-      key: "discount",
-      render: (discount) => `${discount}%`,
-    },
+
     {
       title: "Photo",
       dataIndex: "photo",
@@ -116,12 +115,12 @@ export const ProductScreen = () => {
           <Button
             icon={<EditOutlined />}
             onClick={() => showEditModal(record)}
-            style={{ backgroundColor: "red", color: "white" }}
+            style={{ backgroundColor: "#F49E1A", color: "white" }}
           ></Button>
           <Button
             icon={<DeleteOutlined />}
             onClick={() => handleDelete(record._id)}
-            style={{ backgroundColor: "red", color: "white" }}
+            style={{ backgroundColor: "#F49E1A", color: "white" }}
           ></Button>
         </Space>
       ),
@@ -172,7 +171,7 @@ export const ProductScreen = () => {
             price: product.price,
             category: product.category || "N/A",
             quantity: product.quantity,
-            discount: product.discount,
+            discountPrice: product.discountPrice,
             createdAt: product.createdAt,
             updatedAt: product.updatedAt,
             photo: product.photo || "N/A",
@@ -202,14 +201,14 @@ export const ProductScreen = () => {
         style={{
           display: "flex",
           justifyContent: "space-between",
-          marginBottom: 5,
           alignItems: "center",
+          marginTop: 50,
         }}
       >
         <Typography.Title level={2}>Products</Typography.Title>
         <Button
           onClick={showModal}
-          style={{ backgroundColor: "red", color: "white" }}
+          style={{ backgroundColor: "#F49E1A", color: "white" }}
         >
           Create Product
         </Button>

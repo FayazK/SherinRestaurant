@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import { Button } from "antd";
-import logo from "../assets/logo.jpg";
+import logo from "../assets/logo.png";
 
 const OrderInvoice = ({ order }) => {
   const componentRef = useRef();
@@ -32,10 +32,25 @@ const OrderInvoice = ({ order }) => {
       </tr>
     ));
 
+  // Function to render discount percentage
+  const renderDiscounts = () =>
+    order.cartItems.map((item, index) => (
+      <tr key={index}>
+        <td style={{ flexDirection: "row", alignItems: "center" }}>{`${
+          item.product.discount || 0
+        }%`}</td>
+      </tr>
+    ));
+
   const subtotal = order.cartItems.reduce(
     (acc, item) => acc + item.quantity * item.product.price,
     0
   );
+  const totalAfterDiscount = order.cartItems.reduce((acc, item) => {
+    const discountAmount =
+      (item.product.price * (item.product.discount || 0)) / 100;
+    return acc + item.quantity * (item.product.price - discountAmount);
+  }, 0);
 
   return (
     <div>
@@ -43,8 +58,6 @@ const OrderInvoice = ({ order }) => {
         <div className="invoice-header">
           <img src={logo} alt="Company Logo" className="invoice-logo" />
           <div style={{ margin: 0 }}>
-            {" "}
-            {/* Removed the gap property */}
             <p className="invoice-payment-mode">
               Aqba Road, Saidu Sharif, Pakistan
             </p>
@@ -68,9 +81,11 @@ const OrderInvoice = ({ order }) => {
           <tbody>{renderItems()}</tbody>
         </table>
         <div className="invoice-summary">
+          <p>Discount: {renderDiscounts()} </p>
           <p>Sub Total: {subtotal} Rs</p>
-          <p>Sale Tax: {order.tax} 0 Rs</p>
-          <p className="invoice-total">Total: {order.total} Rs</p>
+          <p className="invoice-total">
+            Total: {totalAfterDiscount.toFixed(2)} Rs
+          </p>
         </div>
       </div>
       <Button type="primary" onClick={handlePrint} className="print-button">

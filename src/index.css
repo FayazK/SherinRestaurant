@@ -12,7 +12,7 @@ code {
   font-family: 'Outfit', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 .ant-menu-item-selected {
-  background-color: red !important; 
+  background-color: #F49E1A !important; 
   color: white !important;
 }
 
@@ -20,7 +20,7 @@ code {
   color: white !important;
 }
 .custom-spin .ant-spin-dot i {
-  background-color: red; 
+  background-color: #F49E1A; 
 }
 @keyframes fadeIn {
   0% {
@@ -38,25 +38,26 @@ code {
   color: #4d4dff; 
   font-size: 28px;
   font-weight: bold; 
-  color: red;
+  color: #F49E1A;
 }
 .ant-layout-sider-collapsed .ant-layout-sider-trigger {
-  background-color: red !important;
+  background-color: #F49E1A !important;
 }
 
 .ant-layout-sider .ant-layout-sider-trigger {
-  background-color: red !important;
+  background-color: #F49E1A !important;
   color: white !important; 
 }
 .invoice-container {
   font-family: 'Outfit', Arial, sans-serif;
   width: 50mm;
-  width: 50mm; /* Match the width to your @page size */
+  width: 50mm; 
   margin: auto;
   text-align: left;
   border: 1px solid #ddd;
   padding: 8mm;
   line-height: 1rem;
+  height:100%
 }
 .invoice-header {
   text-align: center;
@@ -108,8 +109,8 @@ code {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 50mm; /* Adjust as needed */
-  height: auto; /* Maintain aspect ratio */
+  width: 30mm; /* Adjust as needed */
+  height: 100px; 
 }
 .invoice-payment-mode {
   margin: 0; /* This will ensure there is no space between paragraphs */

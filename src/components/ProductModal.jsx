@@ -23,6 +23,16 @@ const CreateProductModal = ({
   console.log();
   const [form] = Form.useForm();
   const [categories, setCategories] = useState([]);
+  const [discountPrice, setDiscountPrice] = useState(null);
+  const handlePriceChange = (value) => {
+    const discount = value;
+
+    setDiscountPrice(discount);
+
+    form.setFieldsValue({
+      discount: discount,
+    });
+  };
 
   useEffect(() => {
     fetchCategories();
@@ -50,25 +60,6 @@ const CreateProductModal = ({
     }
   }, [currentProduct, form]);
 
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/category/get-category`
-      );
-      setCategories(response.data.category || []);
-    } catch (error) {
-      notification.error({
-        message: "Error fetching categories",
-        description: "Could not fetch categories. Please try again later.",
-      });
-    }
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-    form.resetFields();
-  };
-
   const handleSubmit = async (values) => {
     const formData = new FormData();
     formData.append("name", values.name);
@@ -76,7 +67,7 @@ const CreateProductModal = ({
     formData.append("price", values.price);
     formData.append("category", values.category);
     formData.append("quantity", values.quantity);
-    formData.append("discount", values.discount);
+    formData.append("discountPrice", values.discount);
 
     if (values.photo && values.photo.length > 0) {
       formData.append("photo", values.photo[0].originFileObj);
@@ -135,6 +126,25 @@ const CreateProductModal = ({
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/category/get-category`
+      );
+      setCategories(response.data.category || []);
+    } catch (error) {
+      notification.error({
+        message: "Error fetching categories",
+        description: "Could not fetch categories. Please try again later.",
+      });
+    }
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    form.resetFields();
+  };
+
   const normFile = (e) => {
     if (Array.isArray(e)) {
       return e;
@@ -160,6 +170,10 @@ const CreateProductModal = ({
     return isLt5M;
   };
 
+  const initialValues = {
+    discount: form.getFieldValue("price"), // Set discount to initial price value
+  };
+
   return (
     <>
       <Modal
@@ -180,7 +194,22 @@ const CreateProductModal = ({
             <Input />
           </Form.Item>
           <Form.Item name="price" label="Price" rules={[{ required: true }]}>
-            <InputNumber min={1} style={{ width: "100%" }} />
+            <InputNumber
+              min={1}
+              style={{ width: "100%" }}
+              onChange={handlePriceChange}
+            />
+          </Form.Item>
+          <Form.Item
+            name="discount"
+            label="Discounted Price"
+            rules={[{ required: true }]}
+          >
+            <InputNumber
+              min={1}
+              style={{ width: "100%" }}
+              value={discountPrice}
+            />
           </Form.Item>
           <Form.Item
             name="category"
@@ -202,13 +231,7 @@ const CreateProductModal = ({
           >
             <InputNumber min={1} style={{ width: "100%" }} />
           </Form.Item>
-          <Form.Item
-            name="discount"
-            label="Discount"
-            rules={[{ required: true }]}
-          >
-            <InputNumber min={1} style={{ width: "100%" }} />
-          </Form.Item>
+
           <Form.Item
             name="photo"
             label="Photo"
@@ -229,7 +252,7 @@ const CreateProductModal = ({
             </Upload>
           </Form.Item>
           <Button
-            style={{ backgroundColor: "red", color: "white" }}
+            style={{ backgroundColor: "#F49E1A", color: "white" }}
             type="primary"
             htmlType="submit"
           >

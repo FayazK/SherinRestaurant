@@ -40,13 +40,16 @@ export const CustomerScreen = () => {
       dataIndex: "address",
       key: "address",
     },
-    // Add other columns as necessary
   ];
 
   return (
     <>
-      <Typography.Title level={2}>User List</Typography.Title>
-      <Table columns={columns} dataSource={users} rowKey="_id" />
+      <div
+        style={{ marginTop: 80, flexDirection: "column", alignItems: "center" }}
+      >
+        <Typography.Title level={2}>User List</Typography.Title>
+        <Table columns={columns} dataSource={users} rowKey="_id" />
+      </div>
     </>
   );
 };

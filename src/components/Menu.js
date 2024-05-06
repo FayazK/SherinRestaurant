@@ -11,12 +11,7 @@ import { Menu } from "antd";
 
 export const MenuComp = () => {
   return (
-    <Menu
-      theme="light"
-      defaultSelectedKeys={["1"]}
-      mode="inline"
-      style={{ height: "100vh" }}
-    >
+    <Menu theme="light" defaultSelectedKeys={["1"]} mode="inline">
       <Menu.Item
         key="1"
         icon={<DesktopOutlined />}

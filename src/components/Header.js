@@ -26,6 +26,9 @@ export const HeaderComp = () => {
   return (
     <Header
       style={{
+        position: "fixed", // Makes the header fixed
+        zIndex: 1, // Ensures the header stays on top of other content
+        width: "100%", // Ensures the header spans the full width of the viewport
         paddingInline: 20,
         backgroundColor: "white",
         alignItems: "center",
@@ -41,9 +44,9 @@ export const HeaderComp = () => {
       >
         <Space direction="horizontal" align="center">
           <Typography.Title level={2} className="custom-title">
-            Welcome,Admin{" "}
+            Welcome, Admin
           </Typography.Title>
-          <SmileOutlined style={{ color: "red", fontSize: 20 }} />
+          <SmileOutlined style={{ color: "#F49E1A", fontSize: 20 }} />
         </Space>
 
         <LogoutOutlined style={{ fontSize: 20 }} onClick={showModal} />

@@ -1,12 +1,11 @@
-// Dashboard.js
 import React from "react";
 import { Image, Layout } from "antd";
 import { Outlet } from "react-router-dom";
 import { MenuComp } from "./Menu";
-import logo from "../assets/logo.jpg";
+import logo from "../assets/logo.png";
 import { HeaderComp } from "./Header";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider } = Layout;
 
 const Dashboard = () => {
   const [collapsed, setCollapsed] = React.useState(false);
@@ -14,7 +13,13 @@ const Dashboard = () => {
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider
-        style={{ backgroundColor: "white" }}
+        style={{
+          backgroundColor: "white",
+          overflow: "auto",
+          height: "100vh",
+          position: "fixed",
+          left: 0,
+        }}
         collapsible
         collapsed={collapsed}
         onCollapse={setCollapsed}
@@ -26,13 +31,21 @@ const Dashboard = () => {
             marginTop: 10,
           }}
         >
-          <Image style={{ height: 50, width: "100%" }} src={logo} alt="" />
+          <Image
+            preview={false}
+            style={{ height: 50, width: "100%", maxWidth: 300 }}
+            src={logo}
+            alt=""
+          />
         </div>
         <MenuComp />
       </Sider>
-      <Layout className="site-layout">
+      <Layout
+        className="site-layout"
+        style={{ marginLeft: collapsed ? "80px" : "200px", height: "100vh" }}
+      >
         <HeaderComp />
-        <Content style={{ margin: "16px" }}>
+        <Content style={{ margin: "16px", overflow: "initial" }}>
           <Outlet />
         </Content>
         <Footer style={{ textAlign: "center" }}>

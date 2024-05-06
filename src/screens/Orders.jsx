@@ -97,9 +97,11 @@ export const OrderScreen = () => {
         description: "The order has been successfully deleted.",
       });
     } catch (error) {
+      console.error("Error deleting order:", error.response.data); // Log the specific API error message
       notification.error({
         message: "Error",
-        description: "There was an error deleting the order.",
+        description:
+          "There was an error deleting the order. Please try again later.",
       });
     }
     setLoading(false);
@@ -152,9 +154,9 @@ export const OrderScreen = () => {
       render: (text, record) => record.userDetails.phone,
     },
     {
-      title: "Address",
-      key: "address",
-      render: (text, record) => record.userDetails.address,
+      title: "Delivery Address",
+      key: "deliveryaddress",
+      render: (text, record) => record.deliveryaddress,
     },
     {
       title: "Product Photo",
@@ -177,9 +179,9 @@ export const OrderScreen = () => {
       key: "productName",
       render: (text, record) => (
         <>
-          {record.cartItems.slice(0, 1).map((item) => (
-            <Tag color="blue" key={item.product?._id || item.product?.name}>
-              {item.product?.name}
+          {record.cartItems.map((item, index) => (
+            <Tag color="blue" key={index}>
+              {`${item.product?.name} - Qty-${item.quantity}`}
             </Tag>
           ))}
           {record.cartItems.length > 1 && (
@@ -197,24 +199,44 @@ export const OrderScreen = () => {
         </>
       ),
     },
+
     {
-      title: "Price",
+      title: "Total Amount",
       key: "total",
       render: (text, record) => record.total,
     },
     {
-      title: "Quantity",
+      title: "Total Discount",
+      key: "total",
+      render: (text, record) => record.discount,
+    },
+    {
+      title: "Total GST",
+      key: "total",
+      render: (text, record) => record.gst,
+    },
+    {
+      title: "Delivery Charges",
+      key: "deliverycharges",
+      render: (text, record) => Number(record.deliverycharges).toFixed(0),
+    },
+    {
+      title: "Total Items",
       key: "quantity",
       render: (text, record) => {
-        const totalQuantity = record.cartItems.reduce(
-          (sum, item) => sum + (item.quantity || 0),
-          0
-        );
+        if (record.cartItems && record.cartItems.length > 0) {
+          const totalQuantity = record.cartItems.reduce(
+            (sum, item) => sum + (item.quantity || 0),
+            0
+          );
 
-        if (record.cartItems.length > 1) {
-          return totalQuantity;
+          if (record.cartItems.length > 1) {
+            return totalQuantity;
+          } else {
+            return record.cartItems[0].quantity || "N/A";
+          }
         } else {
-          return record.cartItems[0].quantity || "N/A";
+          return "N/A"; // Handle case where cartItems is undefined or empty
         }
       },
     },
