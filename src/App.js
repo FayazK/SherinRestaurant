@@ -15,12 +15,14 @@ import { ProductScreen } from "./screens/Products";
 import { OrderScreen } from "./screens/Orders";
 import { CatagoriesScreen } from "./screens/Categories/Catagories";
 import { Setting } from "./screens/Settings";
+import { PrivacyPolicy } from "./components/Privacy";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="privacypolicy" element={<PrivacyPolicy />} />
         <Route path="dashboard" element={<Dashboard />}>
           <Route index element={<HomeScreen />} />
           <Route path="products" element={<ProductScreen />} />

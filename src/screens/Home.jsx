@@ -80,11 +80,10 @@ export const HomeScreen = () => {
       price: "Pkr 300",
       status: "Available",
     },
-    // Add more data if necessary
   ];
 
   return (
-    <div>
+    <div style={{ marginTop: 100 }}>
       <Row gutter={16}>
         <Col span={6}>
           <Card>

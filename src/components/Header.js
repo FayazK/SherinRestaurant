@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Layout, Modal, Button, Typography, Space } from "antd";
-import { LogoutOutlined, SmileOutlined } from "@ant-design/icons";
+import { Layout, Modal, Button, Typography } from "antd";
+import { LogoutOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
 const { Header } = Layout;
@@ -16,7 +16,7 @@ export const HeaderComp = () => {
   const handleOk = () => {
     localStorage.removeItem("token"); // Remove the token from local storage
     setIsModalVisible(false);
-    navigate("/"); // Navigate to login
+    navigate("/"); // Navigate to home/login page
   };
 
   const handleCancel = () => {
@@ -26,31 +26,25 @@ export const HeaderComp = () => {
   return (
     <Header
       style={{
-        position: "fixed", // Makes the header fixed
-        zIndex: 1, // Ensures the header stays on top of other content
-        width: "100%", // Ensures the header spans the full width of the viewport
+        width: "100%",
         paddingInline: 20,
         backgroundColor: "white",
-        alignItems: "center",
+        display: "flex", // Ensure flex display for alignment
+        alignItems: "center", // Center items vertically
+        justifyContent: "space-between", // Space between the logo and logout icon
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
+      <Typography.Title
+        level={2}
+        className="custom-title"
+        style={{ margin: 0 }}
       >
-        <Space direction="horizontal" align="center">
-          <Typography.Title level={2} className="custom-title">
-            Welcome, Admin
-          </Typography.Title>
-          <SmileOutlined style={{ color: "#F49E1A", fontSize: 20 }} />
-        </Space>
-
-        <LogoutOutlined style={{ fontSize: 20 }} onClick={showModal} />
-      </div>
+        Welcome, Admin!
+      </Typography.Title>
+      <LogoutOutlined
+        style={{ fontSize: 20, cursor: "pointer", color: "black" }}
+        onClick={showModal}
+      />
 
       <Modal
         title="Confirm Logout"

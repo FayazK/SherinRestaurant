@@ -72,6 +72,9 @@ const Login = () => {
       }
     }
   };
+  const handleButton = () => {
+    navigate("privacypolicy");
+  };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -178,6 +181,14 @@ const Login = () => {
                 </Button>
               </Form.Item>
             </Form>
+            <Button
+              type="primary"
+              htmlType="submit"
+              onClick={handleButton}
+              style={{ width: "100%", backgroundColor: "#FEC919" }}
+            >
+              Privacy Policy
+            </Button>
           </Card>
         </Col>
       </Row>

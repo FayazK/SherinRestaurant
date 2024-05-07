@@ -144,11 +144,6 @@ export const OrderScreen = () => {
       render: (text, record) => record.userDetails.name,
     },
     {
-      title: "Email",
-      key: "email",
-      render: (text, record) => record.userDetails.email,
-    },
-    {
       title: "Phone",
       key: "phone",
       render: (text, record) => record.userDetails.phone,
