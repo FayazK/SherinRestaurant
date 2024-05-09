@@ -10,6 +10,7 @@ import {
   Modal,
   Select,
   Tag,
+  Avatar,
 } from "antd";
 import {
   DeleteOutlined,
@@ -156,18 +157,43 @@ export const OrderScreen = () => {
     {
       title: "Product Photo",
       key: "photo",
-      render: (text, record) =>
-        record.cartItems.map((item) =>
-          item.product?.photo ? (
-            <Image
-              src={`${process.env.REACT_APP_IMAGE_URL}/uploads/${item.product.photo}`}
-              alt={item.product.name}
-              style={{ width: "50px", height: "50px" }}
+      render: (text, record) => {
+        if (record.cartItems.length > 1) {
+          return (
+            <Avatar.Group
+              maxCount={2}
+              size="large"
+              maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
+            >
+              {record.cartItems.map((item) =>
+                item.product?.photo ? (
+                  <Avatar
+                    src={`${process.env.REACT_APP_IMAGE_URL}/uploads/${item.product.photo}`}
+                    alt={item.product.name}
+                  />
+                ) : (
+                  <Avatar style={{ backgroundColor: "#ccc" }}>
+                    {item.product.name[0]}
+                  </Avatar>
+                )
+              )}
+            </Avatar.Group>
+          );
+        } else if (
+          record.cartItems.length === 1 &&
+          record.cartItems[0].product?.photo
+        ) {
+          return (
+            <Avatar
+              src={`${process.env.REACT_APP_IMAGE_URL}/uploads/${record.cartItems[0].product.photo}`}
+              alt={record.cartItems[0].product.name}
+              size="large"
             />
-          ) : (
-            <span>No Image</span>
-          )
-        ),
+          );
+        } else {
+          return <span>No Image</span>;
+        }
+      },
     },
     {
       title: "Product Name",
@@ -198,22 +224,26 @@ export const OrderScreen = () => {
     {
       title: "Total Amount",
       key: "total",
-      render: (text, record) => record.total,
+      render: (text, record) => `${record.total} Rs`, // Append " Rs" to the displayed value
     },
     {
       title: "Total Discount",
       key: "total",
-      render: (text, record) => record.discount,
+      render: (text, record) => ` ${record.discount.toFixed(0)} Rs`,
     },
     {
       title: "Total GST",
       key: "total",
-      render: (text, record) => record.gst,
+      render: (text, record) => {
+        return `${Number(record.gst).toFixed(0)} Rs`;
+      },
     },
     {
       title: "Delivery Charges",
       key: "deliverycharges",
-      render: (text, record) => Number(record.deliverycharges).toFixed(0),
+      render: (text, record) => {
+        return `${Number(record.deliverycharges).toFixed(0)} Rs`;
+      },
     },
     {
       title: "Total Items",
@@ -284,7 +314,7 @@ export const OrderScreen = () => {
     setIsModalVisible(true);
   };
   return (
-    <div style={{ padding: 20 }}>
+    <div style={{}}>
       <Typography.Title level={2}>Orders</Typography.Title>
       {loading ? (
         <Spin

@@ -8,6 +8,8 @@ export const Setting = () => {
   const [settings, setSettings] = useState([]);
   const [isModalVisibleGST, setIsModalVisibleGST] = useState(false);
   const [isModalVisibleDelivery, setIsModalVisibleDelivery] = useState(false);
+  const [reload, setReload] = useState("");
+
   const [isModalVisibleOrderDiscount, setIsModalVisibleOrderDiscount] =
     useState(false);
   const [formGST] = Form.useForm();
@@ -15,79 +17,89 @@ export const Setting = () => {
   const [formOrderDiscount] = Form.useForm();
 
   useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const [gstResponse, deliveryResponse, orderDiscountResponse] =
-          await Promise.all([
-            axios.get(`${process.env.REACT_APP_API_URL}/settings/get-gst`),
-            axios.get(`${process.env.REACT_APP_API_URL}/settings/get-delivery`),
-            axios.get(
-              `${process.env.REACT_APP_API_URL}/settings/order-discount`
-            ),
-          ]);
-        const gst = gstResponse.data.data.gst;
-        const deliveryCharges = deliveryResponse.data.data.deliveryCharges;
-        const orderDiscount = orderDiscountResponse.data.data.orderDiscount;
-        setSettings([
-          { key: "GST", value: gst },
-          { key: "Delivery Charges", value: deliveryCharges },
-          { key: "Order Discount", value: orderDiscount },
-        ]);
-        message.success("Settings retrieved successfully");
-      } catch (error) {
-        console.error("Failed to fetch settings:", error);
-        message.error("Failed to retrieve settings");
-      }
-    };
-
-    fetchSettings();
+    fetchInitialSettings();
   }, []);
 
-  const handleUpdateSetting = async (key, value, formInstance) => {
-    const apiEndpoints = {
-      GST: "settings/create-gst",
-      "Delivery Charges": "settings/create-delivery",
-      "Order Discount": "settings/create-discount",
-    };
-
-    const baseUrl = process.env.REACT_APP_API_URL; // Assuming the base URL is stored in an environment variable
-
+  const fetchInitialSettings = async () => {
     try {
-      const url = `${baseUrl}/${apiEndpoints[key]}`; // Construct the URL dynamically based on the key
-      const headers = {
-        "Content-Type": "application/json",
-      };
-      const response = await axios.post(
-        url,
-        { [key.toLowerCase().replace(/\s+/g, "")]: value },
-        { headers }
-      );
-
-      if (response.data.success) {
-        updateSettings(key, value);
-        message.success(`${key} updated successfully`);
-        formInstance.resetFields();
-      } else {
-        message.error(`Failed to update ${key}`);
-      }
+      const [gstResponse, deliveryResponse, orderDiscountResponse] =
+        await Promise.all([
+          axios.get(`${process.env.REACT_APP_API_URL}/settings/get-gst`),
+          axios.get(`${process.env.REACT_APP_API_URL}/settings/get-delivery`),
+          axios.get(`${process.env.REACT_APP_API_URL}/settings/order-discount`),
+        ]);
+      setSettings([
+        { key: "GST", value: gstResponse.data.data.gst },
+        {
+          key: "Delivery Charges",
+          value: deliveryResponse.data.data.deliveryCharges,
+        },
+        {
+          key: "Order Discount",
+          value: orderDiscountResponse.data.data.orderDiscount,
+        },
+      ]);
+      message.success("Settings retrieved successfully");
     } catch (error) {
-      console.error(`Error updating ${key}:`, error);
-      message.error(`Failed to update ${key} due to an error.`);
+      console.error("Failed to fetch settings:", error);
+      message.error("Failed to retrieve settings");
     }
   };
 
-  const updateSettings = (key, value) => {
-    setSettings((prev) =>
-      prev.map((setting) =>
-        setting.key === key ? { ...setting, value } : setting
-      )
-    );
+  const handleUpdateGST = async (value, form) => {
+    const url = `${process.env.REACT_APP_API_URL}/settings/create-gst`;
+    const payload = { gst: value };
+    await updateSetting(url, payload, form);
   };
 
+  const handleUpdateDeliveryCharges = async (value, form) => {
+    const url = `${process.env.REACT_APP_API_URL}/settings/create-delivery`;
+    const payload = { deliveryCharges: value };
+    await updateSetting(url, payload, form);
+  };
+
+  const handleUpdateOrderDiscount = async (value, form) => {
+    const url = `${process.env.REACT_APP_API_URL}/settings/create-discount`;
+    const payload = { orderDiscount: value };
+    await updateSetting(url, payload, form);
+  };
+
+  const updateSetting = async (url, payload, form) => {
+    try {
+      const response = await axios.post(url, payload, {
+        headers: { "Content-Type": "application/json" },
+      });
+      if (response.status === 200 && response.data.success) {
+        setSettings((prev) =>
+          prev.map((item) =>
+            item.key === Object.keys(payload)[0]
+              ? { ...item, value: Object.values(payload)[0] }
+              : item
+          )
+        );
+        message.success("Setting updated successfully");
+        form.resetFields();
+        setReload(!reload);
+      } else {
+        message.error(
+          `Failed to update setting: ${response.data.message || ""}`
+        );
+      }
+    } catch (error) {
+      console.error("Error updating setting:", error);
+      message.error(
+        `Failed to update setting due to an error: ${
+          error.response?.data?.message || error.message
+        }`
+      );
+    }
+  };
+
+  // Modal handling
   const showModal = (type) => {
     if (type === "GST") {
       setIsModalVisibleGST(true);
-    } else if (type === "Delivery") {
+    } else if (type === "Delivery Charges") {
       setIsModalVisibleDelivery(true);
     } else if (type === "Order Discount") {
       setIsModalVisibleOrderDiscount(true);
@@ -104,98 +116,94 @@ export const Setting = () => {
       title: "Value",
       dataIndex: "value",
       key: "value",
+      render: (text, record) => {
+        switch (record.key) {
+          case "GST":
+          case "Order Discount":
+            return `${text} %`;
+          case "Delivery Charges":
+            return `${text} /km`;
+          default:
+            return text;
+        }
+      },
     },
   ];
 
   return (
     <div style={{ marginTop: 50 }}>
-      <div style={{ marginTop: 50 }}>
-        <Title level={2}>Settings</Title>
-        <Button
-          style={{ backgroundColor: "#F49E1A", color: "white" }}
-          type="secondary"
-          onClick={() => showModal("GST")}
+      <Title level={2}>Settings</Title>
+      <Button
+        onClick={() => showModal("GST")}
+        style={{ backgroundColor: "#F49E1A", color: "white" }}
+      >
+        Update GST
+      </Button>
+      <Button
+        onClick={() => showModal("Delivery Charges")}
+        style={{ marginLeft: 8, backgroundColor: "#F49E1A", color: "white" }}
+      >
+        Update Delivery Charges
+      </Button>
+      <Button
+        onClick={() => showModal("Order Discount")}
+        style={{ marginLeft: 8, backgroundColor: "#F49E1A", color: "white" }}
+      >
+        Update Order Discount
+      </Button>
+
+      {/* Modals for updating settings */}
+      <Modal
+        title="Update GST"
+        visible={isModalVisibleGST}
+        onOk={() => formGST.submit()}
+        onCancel={() => setIsModalVisibleGST(false)}
+      >
+        <Form
+          form={formGST}
+          onFinish={(values) => handleUpdateGST(values.gst, formGST)}
         >
-          Update GST
-        </Button>
-        <Button
-          type="secondary"
-          onClick={() => showModal("Delivery")}
-          style={{ marginLeft: 8, backgroundColor: "#F49E1A", color: "white" }}
+          <Form.Item name="gst" label="GST Value">
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Modal
+        title="Update Delivery Charges"
+        visible={isModalVisibleDelivery}
+        onOk={() => formDelivery.submit()}
+        onCancel={() => setIsModalVisibleDelivery(false)}
+      >
+        <Form
+          form={formDelivery}
+          onFinish={(values) =>
+            handleUpdateDeliveryCharges(values.deliveryCharges, formDelivery)
+          }
         >
-          Delivery Charges
-        </Button>
-        <Button
-          type="secondary"
-          onClick={() => showModal("Order Discount")}
-          style={{ marginLeft: 8, backgroundColor: "#F49E1A", color: "white" }}
+          <Form.Item name="deliveryCharges" label="Delivery Charges">
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Modal
+        title="Update Order Discount"
+        visible={isModalVisibleOrderDiscount}
+        onOk={() => formOrderDiscount.submit()}
+        onCancel={() => setIsModalVisibleOrderDiscount(false)}
+      >
+        <Form
+          form={formOrderDiscount}
+          onFinish={(values) =>
+            handleUpdateOrderDiscount(values.orderDiscount, formOrderDiscount)
+          }
         >
-          Order Discount
-        </Button>
-        <Modal
-          title="Update GST"
-          visible={isModalVisibleGST}
-          onOk={() => formGST.submit()}
-          onCancel={() => setIsModalVisibleGST(false)}
-        >
-          <Form
-            form={formGST}
-            onFinish={(values) =>
-              handleUpdateSetting("GST", values.gst, formGST)
-            }
-          >
-            <Form.Item name="gst" label="GST Value">
-              <Input />
-            </Form.Item>
-          </Form>
-        </Modal>
-        <Modal
-          title="Update Delivery Charges"
-          visible={isModalVisibleDelivery}
-          onOk={() => formDelivery.submit()}
-          c
-          onCancel={() => setIsModalVisibleDelivery(false)}
-        >
-          <Form
-            form={formDelivery}
-            onFinish={(values) =>
-              handleUpdateSetting(
-                "Delivery Charges",
-                values.deliveryCharges,
-                formDelivery
-              )
-            }
-          >
-            <Form.Item name="deliveryCharges" label="Delivery Charges">
-              <Input />
-            </Form.Item>
-          </Form>
-        </Modal>
-        <Modal
-          title="Update Order Discount"
-          visible={isModalVisibleOrderDiscount}
-          onOk={() => formOrderDiscount.submit()}
-          onCancel={() => setIsModalVisibleOrderDiscount(false)}
-        >
-          <Form
-            form={formOrderDiscount}
-            onFinish={(values) =>
-              handleUpdateSetting(
-                "Order Discount",
-                values.orderDiscount,
-                formOrderDiscount
-              )
-            }
-          >
-            <Form.Item name="orderDiscount" label="Order Discount Value">
-              <Input />
-            </Form.Item>
-          </Form>
-        </Modal>
-      </div>
-      <div style={{ marginTop: 20 }}>
-        <Table dataSource={settings} columns={columns} pagination={false} />
-      </div>
+          <Form.Item name="orderDiscount" label="Order Discount Value">
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Table dataSource={settings} columns={columns} pagination={false} />
     </div>
   );
 };

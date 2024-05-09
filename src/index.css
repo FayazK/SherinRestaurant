@@ -32,6 +32,11 @@ code {
       transform: translateY(0);
   }
 }
+.dotted-line {
+  border-bottom: 1px dotted #000;  /* Black dotted line */
+  width: 100%;
+  margin: 10px 0;
+}
 
 .custom-title {
   animation: fadeIn 2s ease-out;
@@ -50,24 +55,23 @@ code {
 }
 .invoice-container {
   font-family: 'Outfit', Arial, sans-serif;
-  width: 50mm;
-  width: 50mm; 
+  width: 70mm;
   margin: auto;
   text-align: left;
   border: 1px solid #ddd;
-  padding: 8mm;
+  padding: 4mm;
   line-height: 1rem;
   height:100%
 }
 .invoice-header {
-  text-align: center;
   margin-bottom: 20px;
   line-height: 2rem;
 }
 
 .invoice-title {
   margin: 0;
-  font-weight: bold;
+  font-weight: "600";
+  text-align: center;
 }
 
 .invoice-date,
@@ -77,23 +81,33 @@ code {
 }
 
 .invoice-table {
-  width: 100%;
-  border-collapse: collapse;
+  width: 100%;  
+  border-collapse: collapse;  
+  font-family: Arial, sans-serif; 
 }
 
-.invoice-table th,
-.invoice-table td {
-  border: 1px solid #ddd;
-  padding: 5px;
-  text-align: left;
+.invoice-table th, .invoice-table td {
+  text-align: left; 
+  padding: 8px; 
+  border-bottom: 1px solid #ccc;  
+  font-size: 11px;  
 }
 
 .invoice-table th {
-  font-weight: bold;
+  background-color: #f4f4f4; 
+  font-weight: normal; 
+}
+
+.invoice-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .invoice-summary {
   margin-top: 10px;
+  line-height: 0.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .invoice-total {
@@ -104,13 +118,14 @@ code {
   display: block;
   width: 100%;
   margin-top: 20px;
+  background-color: #FEC919;
 }
 .invoice-logo {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  width: 30mm; /* Adjust as needed */
-  height: 100px; 
+  width: 20mm; /* Adjust as needed */
+  height: 70px; 
 }
 .invoice-payment-mode {
   margin: 0; /* This will ensure there is no space between paragraphs */

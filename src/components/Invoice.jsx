@@ -4,6 +4,7 @@ import { Button } from "antd";
 import logo from "../assets/logo.png";
 
 const OrderInvoice = ({ order }) => {
+  console.log("order", order);
   const componentRef = useRef();
 
   const handlePrint = useReactToPrint({
@@ -16,7 +17,7 @@ const OrderInvoice = ({ order }) => {
       @media print {
         body { -webkit-print-color-adjust: exact; }
         .invoice-container {
-          width: 80mm; /* Adjust width as necessary for your receipt size */
+          width: 120mm; /* Adjust width as necessary for your receipt size */
         }
       }
     `,
@@ -32,6 +33,18 @@ const OrderInvoice = ({ order }) => {
       </tr>
     ));
 
+  const renderPrice = () => {
+    const total = order.cartItems.reduce((sum, item) => {
+      return sum + item.product.price * item.quantity;
+    }, 0);
+
+    return (
+      <tr>
+        <td>{total.toFixed(2)} Rs</td>
+      </tr>
+    );
+  };
+
   // Function to render discount percentage
   const renderDiscounts = () =>
     order.cartItems.map((item, index) => (
@@ -46,30 +59,33 @@ const OrderInvoice = ({ order }) => {
     (acc, item) => acc + item.quantity * item.product.price,
     0
   );
-  const totalAfterDiscount = order.cartItems.reduce((acc, item) => {
-    const discountAmount =
-      (item.product.price * (item.product.discount || 0)) / 100;
-    return acc + item.quantity * (item.product.price - discountAmount);
-  }, 0);
 
   return (
     <div>
       <div ref={componentRef} className="invoice-container">
         <div className="invoice-header">
           <img src={logo} alt="Company Logo" className="invoice-logo" />
-          <div style={{ margin: 0 }}>
-            <p className="invoice-payment-mode">
-              Aqba Road, Saidu Sharif, Pakistan
-            </p>
-            <p className="invoice-payment-mode">Contact No :0315 6884477</p>
-          </div>
+          <h4 className="invoice-title">Retail Invoice</h4>
+          <div class="dotted-line"></div>
 
-          <h1 className="invoice-title">Retail Invoice</h1>
-          <p className="invoice-date">
-            Date: {new Date(order.createdAt).toLocaleString()}
-          </p>
-          <p className="invoice-payment-mode">Payment Mode: Cash</p>
+          <div style={{ lineHeight: "1.5rem" }}>
+            <h5 className="invoice-payment-mode">
+              Serial Number: #SH{order._id.slice(0, 5)}
+            </h5>
+            <h5 className="invoice-payment-mode">
+              Address : {order.deliveryaddress}
+            </h5>
+            <h5 className="invoice-payment-mode">
+              Phone# : {order.userDetails.phone}
+            </h5>
+            <h5 className="invoice-date">
+              Date: {new Date(order.createdAt).toLocaleString()}
+            </h5>
+            <h5 className="invoice-date">Payment Mode: Cash</h5>
+          </div>
         </div>
+        <div class="dotted-line"></div>
+
         <table className="invoice-table">
           <thead>
             <tr>
@@ -80,12 +96,36 @@ const OrderInvoice = ({ order }) => {
           </thead>
           <tbody>{renderItems()}</tbody>
         </table>
+        <div class="dotted-line"></div>
+
         <div className="invoice-summary">
-          <p>Discount: {renderDiscounts()} </p>
-          <p>Sub Total: {subtotal} Rs</p>
-          <p className="invoice-total">
-            Total: {totalAfterDiscount.toFixed(2)} Rs
-          </p>
+          <div
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              display: "flex",
+            }}
+          >
+            <p>Sub Total : </p>
+            <p>{renderPrice()} </p>
+          </div>
+          <p>Sale Tax: {order.gst} Rs </p>
+
+          <p>Discount: {order.discount} Rs </p>
+          <p>Delivery Charges: {Math.round(order.deliverycharges)} Rs</p>
+        </div>
+        <div class="dotted-line"></div>
+
+        <div
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <h3> Total </h3>
+          <p>{order.total} Rs</p>
         </div>
       </div>
       <Button type="primary" onClick={handlePrint} className="print-button">
